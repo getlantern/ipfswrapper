@@ -22,7 +22,7 @@ import (
 var log = golog.LoggerFor("flashlight.ipfs")
 
 type Node struct {
-	node   *core.Node
+	node   *core.IpfsNode
 	pk     crypto.PrivKey
 	ctx    context.Context
 	cancel context.CancelFunc
