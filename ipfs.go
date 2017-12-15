@@ -72,7 +72,11 @@ func (node *Node) Stop() {
 	node.cancel()
 }
 
-func (node *Node) Add(content string) (path string, err error) {
+func (node *Node) Add(r io.Reader) (path string, err error) {
+	return coreunix.Add(node.node, r)
+}
+
+func (node *Node) AddString(content string) (path string, err error) {
 	return coreunix.Add(node.node, strings.NewReader(content))
 }
 
