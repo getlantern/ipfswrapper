@@ -12,7 +12,6 @@ import (
 	"github.com/getlantern/go-ipfs/path"
 	"github.com/getlantern/go-ipfs/repo/fsrepo"
 	uio "github.com/getlantern/go-ipfs/unixfs/io"
-	node "github.com/ipfs/go-ipld-format"
 	crypto "github.com/libp2p/go-libp2p-crypto"
 	peer "github.com/libp2p/go-libp2p-peer"
 
@@ -73,16 +72,16 @@ func (node *Node) Stop() {
 	node.cancel()
 }
 
-func (node *Node) Add(content string, name string) (path string, dNode node.Node, err error) {
-	return coreunix.AddWrapped(node.node, strings.NewReader(content), name)
+func (node *Node) Add(content string) (path string, err error) {
+	return coreunix.Add(node.node, strings.NewReader(content))
 }
 
-func (node *Node) AddFile(fileName string, name string) (path string, dNode node.Node, err error) {
+func (node *Node) AddFile(fileName string) (path string, err error) {
 	file, err := os.Open(fileName)
 	if err != nil {
-		return "", nil, err
+		return "", err
 	}
-	return coreunix.AddWrapped(node.node, file, name)
+	return coreunix.Add(node.node, file)
 }
 
 func (node *Node) GetFile(pt string) (io.Reader, error) {
