@@ -32,6 +32,8 @@ type IpnsEntry struct {
 	Value string
 }
 
+type DagReader uio.DagReader
+
 func Start(repoDir string, pkfile string) (*Node, error) {
 	if !fsrepo.IsInitialized(repoDir) {
 		log.Debugf("Creating IPFS repo at %v", repoDir)
@@ -88,7 +90,7 @@ func (node *Node) AddFile(fileName string) (path string, err error) {
 	return coreunix.Add(node.node, file)
 }
 
-func (node *Node) GetFile(pt string) (io.Reader, error) {
+func (node *Node) Get(pt string) (DagReader, error) {
 	p := path.Path(pt)
 	dn, err := core.Resolve(node.ctx, node.node.Namesys, node.node.Resolver, p)
 	if err != nil {
@@ -97,8 +99,8 @@ func (node *Node) GetFile(pt string) (io.Reader, error) {
 	return uio.NewDagReader(node.ctx, dn, node.node.DAG)
 }
 
-func (node *Node) Get(pt string) (string, error) {
-	reader, err := node.GetFile(pt)
+func (node *Node) GetString(pt string) (string, error) {
+	reader, err := node.Get(pt)
 	if err != nil {
 		return "", err
 	}
